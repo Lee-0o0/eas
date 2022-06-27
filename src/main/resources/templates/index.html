@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+
+<style>
+  .mycontainer{
+    padding-top: 200px;
+  }
+</style>
+
+</head>
+<body>
+<div class="layui-container mycontainer">
+  <div class="layui-row">
+    <div class="layui-col-md4 layui-col-md-offset5" >
+      <h1>教务系统</h1>
+      <br>
+    </div>
+  </div>
+  <div class="layui-row">
+    <div class="layui-col-md6 layui-col-md-offset3">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学号：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-lg" lay-submit lay-filter="formDemo">查询成绩</button>
+                    <button class="layui-btn layui-btn-warm layui-btn-lg">修改密码</button>
+                    <button class="layui-btn layui-btn-normal layui-btn-lg">管理员登陆</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use('form',function (){
+        console.log(layui.form);
+    })
+</script>
+</body>
+</html>
