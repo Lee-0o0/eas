@@ -8,7 +8,44 @@ import java.util.List;
 
 @Mapper
 public interface StudentMapper {
+    /**
+     * 根据ID获取学生信息
+     * @param id 学生ID
+     * @return
+     */
     StudentPO getStudentById(int id);
 
-    List<StudentPO> queryAllStudents();
+    /**
+     * 统计学生数量
+     * @return
+     */
+    int countStudent();
+
+    /**
+     * 根据分页信息查询学生信息
+     * @param offset 偏移量
+     * @param pageSize 返回数量
+     * @return
+     */
+    List<StudentPO> queryAllStudents(int offset, int pageSize);
+
+    /**
+     * 新增学生
+     * @param studentPO
+     */
+    int insertStudent(StudentPO studentPO);
+
+    /**
+     * 修改学生信息
+     * @param studentPO
+     * @return
+     */
+    int updateStudent(StudentPO studentPO);
+
+    /**
+     * 根据ID删除学生
+     * @param id
+     * @return
+     */
+    int deleteStudent(int id);
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdministratorPO {
+public class AdminPO {
     // ID
     private int id;
     // 用户名

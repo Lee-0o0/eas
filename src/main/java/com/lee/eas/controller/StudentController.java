@@ -3,17 +3,19 @@ package com.lee.eas.controller;
 import com.lee.eas.domain.dto.Pagination;
 import com.lee.eas.domain.dto.Response;
 import com.lee.eas.domain.dto.StudentDTO;
+import com.lee.eas.service.IStudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @Controller
 public class StudentController {
+
+    @Autowired
+    private IStudentService studentService;
 
     @ResponseBody
     @GetMapping("/student")
@@ -28,27 +30,20 @@ public class StudentController {
 
         Response<Pagination<StudentDTO>> response = new Response<>();
 
-
-        response.setCode(200);
-        response.setMsg("");
-        Pagination<StudentDTO> pagination = new Pagination<>();
-        pagination.setPage(page);
-        pagination.setPageSize(pageSize);
-        pagination.setTotal(new Random().nextInt() + 100);
-
-        List<StudentDTO> studentDTOList = new ArrayList<>() ;
-        for(int i = 0; i < pageSize; i++){
-            studentDTOList.add(new StudentDTO(i,"姓名" + i,"学号"+i));
+        Pagination<StudentDTO> pagination;
+        try {
+            pagination = studentService.queryStudent(page, pageSize);
+        }catch (Exception e){
+            response.setCode(-1);
+            response.setMsg(e.getMessage());
+            return response;
         }
-        pagination.setData(studentDTOList);
-
+        response.setCode(0);
+        response.setMsg("成功");
         response.setData(pagination);
         return response;
     }
 
-    @GetMapping("/admin/index")
-    public String toIndex(){
-        return "/admin/index";
-    }
+
 
 }
