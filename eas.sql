@@ -27,6 +27,18 @@ insert into student(`name`,`student_number`,`password`) values('李四','2022002
 insert into student(`name`,`student_number`,`password`) values('王五','2022003','003');
 insert into student(`name`,`student_number`,`password`) values('赵六','2022004','004');
 
+create table exam(
+    `id` int unsigned not null primary key auto_increment,
+    `name` varchar(256) not null ,
+    `exam_address` varchar(256) not null comment '考试地点',
+    `exam_datetime` datetime not null comment '考试时间'
+);
+
+insert into exam(`name`,`exam_address`,`exam_datetime`) values('第一次考试','教室1',now());
+insert into exam(`name`,`exam_address`,`exam_datetime`) values('第二次考试','教室2',now());
+insert into exam(`name`,`exam_address`,`exam_datetime`) values('第三次考试','教室3',now());
+
+
 create table grade(
     `id` int unsigned not null primary key auto_increment,
     `exam_number` int unsigned not null,
