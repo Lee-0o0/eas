@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.lee.eas.mapper.ExamMapper">
     <insert id="insertExam">
-        insert into exam(`name`,`location`,`datetime`) values(#{name},#{location},#{datetime})
+        insert into exam(`name`,`exam_address`,`exam_datetime`) values(#{name},#{examAddress},#{examDatetime})
     </insert>
     <update id="updateExam">
         update exam
         set name = #{name},
-            location = #{location},
-            datetime = #{datetime}
+            exam_address = #{examAddress},
+            exam_datetime = #{examDatetime}
         where id = #{id}
     </update>
     <delete id="deleteExam">
@@ -19,8 +19,10 @@
         select * from exam where id = #{id}
     </select>
     <select id="queryAllExam" resultType="com.lee.eas.domain.po.ExamPO">
-        select *
-        from exam;
+        select * from exam limit #{size} offset #{offset}
+    </select>
+    <select id="countExam" resultType="java.lang.Integer">
+        select count(id) from exam;
     </select>
 
 </mapper>

@@ -10,7 +10,9 @@ public interface ExamMapper {
 
     ExamPO getExamById(int id);
 
-    List<ExamPO> queryAllExam();
+    List<ExamPO> queryAllExam(int offset,int size);
+
+    int countExam();
 
     int insertExam(ExamPO examPO);
 
