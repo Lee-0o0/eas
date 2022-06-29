@@ -7,6 +7,7 @@ import com.lee.eas.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -45,5 +46,27 @@ public class StudentController {
     }
 
 
+
+    @ResponseBody
+    @PostMapping("/student")
+    public Response addStudent(StudentDTO studentDTO){
+        boolean insertStudent = studentService.insertStudent(studentDTO);
+
+        Response response = new Response();
+        if(insertStudent){
+            response.setCode(0);
+            response.setMsg("成功");
+        }else{
+            response.setCode(-1);
+            response.setMsg("失败");
+        }
+
+        return response;
+    }
+
+    @GetMapping("/updatepassword")
+    public String toUpdatePassword(){
+        return "/updatePassword";
+    }
 
 }

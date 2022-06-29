@@ -15,6 +15,17 @@ create table administrator(
 
 insert into administrator(`username`,`password`) values('admin','admin');
 
+create table student_and_grade(
+    `id` int unsigned not null primary key auto_increment,
+    `name` varchar(256) not null,
+    `student_number` varchar(256) not null unique,
+    `password` varchar(256) not null,
+    `subject_one` varchar(256) default '0',
+    `subject_two` varchar(256) default '0',
+    `total` varchar(256) default '0',
+    `rank` int default 0
+);
+
 create table student(
     `id` int unsigned not null primary key auto_increment,
     `name` varchar(256) not null,

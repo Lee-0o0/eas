@@ -2,16 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理员登陆</title>
+    <title>Title</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+
+<style>
+  .mycontainer{
+    padding-top: 200px;
+  }
+</style>
+
 </head>
 <body>
-<h1>管理员登陆</h1>
+<div class="layui-container mycontainer">
+  <div class="layui-row">
+    <div class="layui-col-md4 layui-col-md-offset5" >
+      <h1>教务系统</h1>
+      <br>
+    </div>
+  </div>
+  <div class="layui-row">
+    <div class="layui-col-md6 layui-col-md-offset3">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-lg" lay-submit lay-filter="formDemo">登陆</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
 
-<form action="/admin/login" method="post">
-    用户名：<input type="text" name="username"><br>
-    密码：<input type="text" name="password"><br>
-    <input type="submit" value="提交">
-</form>
-
+<script src="/layui/layui.js"></script>
 </body>
 </html>
