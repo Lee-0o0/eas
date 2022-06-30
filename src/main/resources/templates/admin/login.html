@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>管理员登录-教务管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 
 <style>
   .mycontainer{
-    padding-top: 200px;
+      position: absolute;
+      left: 15%;
+      top: 25%;
+      width: 70%;
+      height: 50%;
+  }
+  .layui-row{
+      margin-bottom: 10px;
   }
 </style>
 
@@ -16,8 +23,7 @@
 <div class="layui-container mycontainer">
   <div class="layui-row">
     <div class="layui-col-md4 layui-col-md-offset5" >
-      <h1>教务系统</h1>
-      <br>
+      <h1>管理员登录-教务管理系统</h1>
     </div>
   </div>
   <div class="layui-row">
@@ -26,7 +32,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">用户名：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
+                    <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -37,7 +43,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-lg" lay-submit lay-filter="formDemo">登陆</button>
+                    <button class="layui-btn layui-btn-lg" lay-submit lay-filter="adminLogin">登陆</button>
                 </div>
             </div>
         </form>
@@ -46,5 +52,28 @@
 </div>
 
 <script src="/layui/layui.js"></script>
+<script>
+    let form = layui.form;
+    let $ = layui.$;
+    let layer = layui.layer;
+
+    form.on('submit(adminLogin)', function (data) {
+        console.log("管理员登录");
+        console.log(data)
+
+        $.post("/admin/doLogin",data.field,function (resp){
+            if(resp.code == 0){
+                // 登录成功
+                layer.msg(resp.msg);
+                window.location.href="/admin/students";
+            }else{
+                layer.msg(resp.msg);
+            }
+        })
+        return false;
+    });
+
+
+</script>
 </body>
 </html>

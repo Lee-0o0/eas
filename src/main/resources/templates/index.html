@@ -2,78 +2,108 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link href="/layui/css/layui.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教务系统</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <style>
+        div.container {
+            position: absolute;
+            left: 15%;
+            top: 25%;
+            width: 70%;
+            height: 50%;
+        }
 
-  <style>
-    .mycontainer {
-      padding-top: 200px;
-    }
-  </style>
-
+        div.layui-row {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="layui-container mycontainer">
-    <div class="layui-row">
-      <div class="layui-col-md4 layui-col-md-offset5">
-        <h1>教务系统</h1>
-        <br>
-      </div>
-    </div>
-    <div class="layui-row">
-      <div class="layui-col-md6 layui-col-md-offset3">
-        <form class="layui-form">
-          <div class="layui-form-item">
-            <label class="layui-form-label">学号：</label>
-            <div class="layui-input-block">
-              <input type="text" name="title" required lay-verify="required" placeholder="请输入学号" autocomplete="off"
-                class="layui-input">
+    <div class="layui-container container">
+        <div class="layui-row">
+            <div class="layui-col-md4 layui-col-md-offset5">
+                <h1>教务系统</h1>
             </div>
-          </div>
-          <div class="layui-form-item">
-            <label class="layui-form-label">密码：</label>
-            <div class="layui-input-block">
-              <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
-                autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md6 layui-col-md-offset3">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">学号：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="studentNumber" placeholder="请输入学号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码：</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="password" placeholder="请输入密码" autocomplete="off"
+                                class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-lg" lay-submit lay-filter="queryGrade">查询成绩</button>
+                            <button class="layui-btn layui-btn-warm layui-btn-lg" lay-submit
+                                lay-filter="updatePassword">修改密码</button>
+                            <button id="adminLogin" class="layui-btn layui-btn-normal layui-btn-lg" lay-submit
+                                lay-filter="adminLogin">管理员登陆</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
-          <div class="layui-form-item">
-            <div class="layui-input-block">
-              <button class="layui-btn layui-btn-lg layui-btn-fluid" lay-submit lay-filter="formDemo">查询成绩</button>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-    <div class="layui-row">
-      <div class="layui-col-md6 layui-col-md-offset3">
-        <button class="layui-btn layui-btn-warm layui-btn-lg layui-btn-fluid">修改密码</button>
-      </div>
-    </div>
-    <div class="layui-row">
-      <div class="layui-col-md6 layui-col-md-offset3">
-        <button id="adminLogin" class="layui-btn layui-btn-normal layui-btn-lg layui-btn-fluid">管理员登陆</button>
-      </div>
-    </div>
-  </div>
 
-  <script src="/layui/layui.js"></script>
-  <script>
+    <script src="/layui/layui.js"></script>
+    <script>
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.jquery;
 
-    var $ = layui.$;
-    
-    $("#adminLogin").click(function () {
-      $.get("/admin/login", function () {
-        console.log("管理员登陆界面")
-      })
-    });
+        form.on('submit(queryGrade)', function (data) {
+            console.log("查询成绩");
 
-    layui.use('form', function () {
-      console.log(layui.form);
-    })
-  </script>
+            if(data.field.studentNumber == null || data.field.studentNumber == ""){
+                layer.msg("请输入学号");
+                return false;
+            }
+            if(data.field.password == null || data.field.password == ""){
+                layer.msg("请输入密码");
+                return false;
+            }
+
+            $.post(
+                "/student/grade",
+                data.field,
+                function (resp) {
+                    if(resp == 0){
+                        // 查询成功
+                        //layer.open()
+                        layer.msg(resp.msg);
+                    }else{
+                        layer.msg(resp.msg);
+                    }
+                },
+                "json");
+            return false;
+        });
+
+        form.on('submit(updatePassword)', function (data) {
+            window.location.href="/student/updatepassword";
+            return false;
+
+        });
+        
+        form.on('submit(adminLogin)', function (data) {
+            window.location.href="/admin/login";
+            return false;
+        });
+    </script>
 </body>
 
 </html>

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.SecureRandom;
 
 
 @Controller
@@ -22,9 +23,10 @@ public class AdminController {
     private IAdminService adminService;
 
     @ResponseBody
-    @PostMapping("/admin/login")
+    @PostMapping("/admin/doLogin")
     public Response login(String username,
                           String password){
+        System.out.println(username +" --- "+password);
 
         Response response = new Response();
         boolean login = adminService.login(username, password);
@@ -42,6 +44,11 @@ public class AdminController {
     @GetMapping("/admin/login")
     public String toLogin(){
         return "/admin/login";
+    }
+
+    @GetMapping("/admin/students")
+    public String toStudents(){
+        return "/admin/students";
     }
 
     @PostMapping("/upload")

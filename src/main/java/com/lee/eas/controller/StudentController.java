@@ -6,12 +6,9 @@ import com.lee.eas.domain.dto.StudentDTO;
 import com.lee.eas.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin(origins = "*")
 @Controller
 public class StudentController {
 
@@ -46,6 +43,22 @@ public class StudentController {
     }
 
 
+    @ResponseBody
+    @PostMapping("/student/grade")
+    public Response<StudentDTO> getStudentGrade(String studentNumber,String password){
+        System.out.println(studentNumber+"--"+password);
+        Response<StudentDTO> response = new Response<>();
+        response.setCode(0);
+        response.setMsg("成功");
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setId(1);
+        studentDTO.setName("张三");
+        studentDTO.setStudentNumber("2000210");
+
+        response.setData(studentDTO);
+        return response;
+    }
+
 
     @ResponseBody
     @PostMapping("/student")
@@ -64,7 +77,7 @@ public class StudentController {
         return response;
     }
 
-    @GetMapping("/updatepassword")
+    @GetMapping("/student/updatepassword")
     public String toUpdatePassword(){
         return "/updatePassword";
     }

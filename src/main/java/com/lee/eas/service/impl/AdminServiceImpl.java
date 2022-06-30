@@ -14,11 +14,9 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public boolean login(String username, String password) {
-
         AdminPO adminByUsername = adminMapper.getAdminByUsername(username);
-        if(adminByUsername.getPassword().equals(password)) {
-            return true;
-        }
-        return false;
+        if(adminByUsername == null || !password.equals(adminByUsername.getPassword()))
+            return false;
+        return true;
     }
 }
