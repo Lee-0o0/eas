@@ -15,17 +15,6 @@ create table administrator(
 
 insert into administrator(`username`,`password`) values('admin','admin');
 
-create table student_and_grade(
-    `id` int unsigned not null primary key auto_increment,
-    `name` varchar(256) not null,
-    `student_number` varchar(256) not null unique,
-    `password` varchar(256) not null,
-    `subject_one` varchar(256) default '0',
-    `subject_two` varchar(256) default '0',
-    `total` varchar(256) default '0',
-    `rank` int default 0
-);
-
 create table student(
     `id` int unsigned not null primary key auto_increment,
     `name` varchar(256) not null,
@@ -68,3 +57,19 @@ insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`
 values(1,3,'100','98','198',3);
 insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`) 
 values(1,4,'99','99','198',3);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(2,1,'100','100','200',1);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(2,2,'100','99','199',2);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(2,3,'100','98','198',3);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(2,4,'99','99','198',3);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(3,1,'100','100','200',1);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(3,2,'100','99','199',2);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(3,3,'100','98','198',3);
+insert into grade(`exam_number`,`student_id`,`subject_one`,`subject_two`,`total`,`rank`)
+values(3,4,'99','99','198',3);

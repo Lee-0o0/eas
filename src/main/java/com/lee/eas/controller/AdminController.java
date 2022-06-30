@@ -5,12 +5,11 @@ import com.lee.eas.domain.dto.Response;
 import com.lee.eas.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -23,14 +22,16 @@ public class AdminController {
     private IAdminService adminService;
 
     @ResponseBody
-    @PostMapping("/admin/doLogin")
+    @PostMapping("/admin/login")
     public Response login(String username,
-                          String password){
+                          String password,
+                          HttpServletRequest request){
         System.out.println(username +" --- "+password);
 
         Response response = new Response();
         boolean login = adminService.login(username, password);
         if(login){
+            request.getSession(true);
             response.setCode(0);
             response.setMsg("成功");
             return response;
@@ -41,6 +42,23 @@ public class AdminController {
         }
     }
 
+    @ResponseBody
+    @PostMapping("/admin/unlogin")
+    public Response unLogin(HttpServletRequest request){
+        Response response = new Response();
+
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            response.setCode(-1);
+            response.setMsg("请先登陆");
+            return response;
+        }
+        session.invalidate();
+        response.setCode(0);
+        response.setMsg("成功");
+        return response;
+    }
+
     @GetMapping("/admin/login")
     public String toLogin(){
         return "/admin/login";
@@ -49,6 +67,16 @@ public class AdminController {
     @GetMapping("/admin/students")
     public String toStudents(){
         return "/admin/students";
+    }
+
+    @GetMapping("/admin/exams")
+    public String toExams(){
+        return "/admin/exams";
+    }
+
+    @GetMapping("/admin/grades")
+    public String toGrades(){
+        return "/admin/grades";
     }
 
     @PostMapping("/upload")

@@ -24,5 +24,8 @@
         select count(*)
         from student;
     </select>
+    <select id="getStudentByStudentNumber" resultType="com.lee.eas.domain.po.StudentPO">
+        select * from student where student_number = #{number}
+    </select>
 
 </mapper>

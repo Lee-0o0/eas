@@ -14,6 +14,8 @@ public interface ExamMapper {
 
     int countExam();
 
+    int getExamMaxId();
+
     int insertExam(ExamPO examPO);
 
     int updateExam(ExamPO examPO);

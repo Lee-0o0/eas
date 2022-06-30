@@ -24,5 +24,8 @@
     <select id="countExam" resultType="java.lang.Integer">
         select count(id) from exam;
     </select>
+    <select id="getExamMaxId" resultType="java.lang.Integer">
+        select max(id) from exam;
+    </select>
 
 </mapper>

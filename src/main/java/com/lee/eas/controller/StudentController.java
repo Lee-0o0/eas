@@ -3,6 +3,7 @@ package com.lee.eas.controller;
 import com.lee.eas.domain.dto.Pagination;
 import com.lee.eas.domain.dto.Response;
 import com.lee.eas.domain.dto.StudentDTO;
+import com.lee.eas.domain.dto.StudentWithGradeDTO;
 import com.lee.eas.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,19 +44,28 @@ public class StudentController {
     }
 
 
+    /**
+     * 查询成绩
+     * @param studentNumber
+     * @param password
+     * @return
+     */
     @ResponseBody
     @PostMapping("/student/grade")
-    public Response<StudentDTO> getStudentGrade(String studentNumber,String password){
+    public Response<StudentWithGradeDTO> getStudentGrade(String studentNumber, String password){
         System.out.println(studentNumber+"--"+password);
-        Response<StudentDTO> response = new Response<>();
-        response.setCode(0);
-        response.setMsg("成功");
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setId(1);
-        studentDTO.setName("张三");
-        studentDTO.setStudentNumber("2000210");
 
-        response.setData(studentDTO);
+        Response<StudentWithGradeDTO> response = new Response<>();
+        if(studentNumber == null || "".equals(studentNumber)){
+            response.setCode(-1);
+            response.setMsg("学号为空");
+        }else if(password == null || "".equals(password)){
+            response.setCode(-1);
+            response.setMsg("密码为空");
+        }else{
+            response = studentService.queryGrade(studentNumber,password);
+        }
+
         return response;
     }
 

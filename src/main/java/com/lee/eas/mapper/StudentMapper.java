@@ -16,6 +16,13 @@ public interface StudentMapper {
     StudentPO getStudentById(int id);
 
     /**
+     * 根据学号获取学生信息
+     * @param number 学号
+     * @return
+     */
+    StudentPO getStudentByStudentNumber(String number);
+
+    /**
      * 统计学生数量
      * @return
      */
