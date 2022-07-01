@@ -56,12 +56,34 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public boolean insertStudent(StudentDTO studentDTO) {
-        StudentPO studentPO = new StudentPO(studentDTO.getId(),
+    public Response insertStudent(StudentDTO studentDTO) {
+        StudentPO studentPO = new StudentPO(-1,
                 studentDTO.getName(),
                 studentDTO.getStudentNumber(),
                 studentDTO.getStudentNumber());
-        return studentMapper.insertStudent(studentPO) == 1;
+
+        Response response = new Response();
+        response.setCode(-1);
+
+        StudentPO studentByStudentNumber = studentMapper.getStudentByStudentNumber(studentDTO.getStudentNumber());
+        if(studentByStudentNumber != null){
+            response.setMsg("学号重复");
+            return response;
+        }
+
+        try {
+            boolean b = studentMapper.insertStudent(studentPO) == 1;
+            if(b) {
+                response.setCode(0);
+                response.setMsg("成功");
+            }else{
+                response.setMsg("失败");
+            }
+        }catch (Exception e){
+            response.setMsg(e.getMessage());
+        }
+
+        return response;
     }
 
     @Override

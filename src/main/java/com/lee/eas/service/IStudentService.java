@@ -12,7 +12,7 @@ public interface IStudentService {
 
     Pagination<StudentDTO> queryStudent(int page, int pageSize);
 
-    boolean insertStudent(StudentDTO studentDTO);
+    Response insertStudent(StudentDTO studentDTO);
 
     boolean updateStudent(StudentDTO studentDTO);
 

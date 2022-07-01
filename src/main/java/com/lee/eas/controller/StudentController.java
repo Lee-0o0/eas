@@ -4,6 +4,7 @@ import com.lee.eas.domain.dto.Pagination;
 import com.lee.eas.domain.dto.Response;
 import com.lee.eas.domain.dto.StudentDTO;
 import com.lee.eas.domain.dto.StudentWithGradeDTO;
+import com.lee.eas.domain.po.StudentPO;
 import com.lee.eas.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,24 +73,32 @@ public class StudentController {
 
     @ResponseBody
     @PostMapping("/student")
-    public Response addStudent(StudentDTO studentDTO){
-        boolean insertStudent = studentService.insertStudent(studentDTO);
-
+    public Response addStudent(String name , String studentNumber){
         Response response = new Response();
-        if(insertStudent){
-            response.setCode(0);
-            response.setMsg("成功");
-        }else{
-            response.setCode(-1);
-            response.setMsg("失败");
+        response.setCode(-1);
+        if(name == null || "".equals(name)){
+            response.setMsg("学生姓名不能为空");
+            return response;
+        }
+        if(studentNumber == null || "".equals(studentNumber)){
+            response.setMsg("学号不能为空");
+            return response;
         }
 
-        return response;
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setName(name);
+        studentDTO.setStudentNumber(studentNumber);
+        return studentService.insertStudent(studentDTO);
     }
 
     @GetMapping("/student/updatepassword")
     public String toUpdatePassword(){
         return "/updatePassword";
+    }
+
+    @GetMapping("/student/add")
+    public  String toAddStudent(){
+        return "/admin/addStudent";
     }
 
     @ResponseBody
