@@ -126,4 +126,18 @@ public class StudentController {
         return studentService.updatePassword(studentNumber, oldPassword, newPassword);
     }
 
+    @ResponseBody
+    @GetMapping("/student/delete")
+    public Response deleteStudent(int id){
+        Response response = new Response();
+        response.setCode(-1);
+
+        if(id < 0){
+            response.setMsg("ID违法");
+            return response;
+        }
+
+        return studentService.deleteStudent(id);
+    }
+
 }

@@ -40,12 +40,12 @@
         <div class="layui-fluid">
           <div class="layui-row">
             <div class="div-col-md12">
-              <table id="table" lay-filter="test"></table>
+              <button id="addStudentBtn" type="button" class="layui-btn layui-btn-fluid">添加学生</button>
             </div>
           </div>
           <div class="layui-row">
             <div class="div-col-md12">
-              <button id="addStudentBtn" type="button" class="layui-btn layui-btn-fluid">添加学生</button>
+              <table id="table" lay-filter="test"></table>
             </div>
           </div>
         </div>
@@ -87,9 +87,43 @@
         [ //表头 [[ 之间要加空格
           { field: 'name', title: '姓名', sort: true },
           { field: 'studentNumber', title: '学号', sort: true },
-          { field: 'studentNumber', title: '操作', align: 'center' },
+          {
+            title: '操作',
+            align: 'center',
+            templet: function () {
+              let content = "<button type=\"button\" lay-event=\"edit\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-normal\">编辑</button>";
+              content += "<button type=\"button\" lay-event=\"del\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-danger\">删除</button>";
+              return content;
+            }
+          },
         ]
       ]
+    });
+
+    //单元格工具事件
+    table.on('tool(test)', function (obj) { // 注：test 是 table 原始标签的属性 lay-filter="对应的值"
+      var data = obj.data; //获得当前行数据
+      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+      var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+      if (layEvent === 'edit') { //查看
+        //do somehing
+      } else if (layEvent === 'del') { //删除
+        layer.confirm('是否删除？',{icon:3,title:"提示"} , function (index) {
+          layer.close(index);
+          //向服务端发送删除指令
+          $.get("/student/delete",{id:obj.data.id},function(resp){
+            if(resp.code == 0){
+              // 删除成功，更新表格
+              //obj.del();
+              stuTable.reload();
+            }else{
+              // 删除失败
+              layer.msg(resp.msg);
+            }
+          })
+        });
+      } 
     });
 
 

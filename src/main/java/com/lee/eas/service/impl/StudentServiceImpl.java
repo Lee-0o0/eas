@@ -98,8 +98,23 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public boolean deleteStudent(int id) {
-        return studentMapper.deleteStudent(id) == 1;
+    public Response deleteStudent(int id) {
+
+        Response response = new Response();
+        response.setCode(-1);
+        try{
+            boolean b = studentMapper.deleteStudent(id) == 1;
+            if(b){
+                response.setCode(0);
+                response.setMsg("成功");
+            }else {
+                response.setMsg("删除失败");
+            }
+        }catch (Exception e){
+            response.setMsg(e.getMessage());
+        }
+
+        return response;
     }
 
     @Override

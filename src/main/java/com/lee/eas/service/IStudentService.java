@@ -16,7 +16,7 @@ public interface IStudentService {
 
     boolean updateStudent(StudentDTO studentDTO);
 
-    boolean deleteStudent(int id);
+    Response deleteStudent(int id);
 
     Response updatePassword(String studentNumber, String oldPsw, String newPsw);
 
