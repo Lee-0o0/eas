@@ -19,7 +19,7 @@
       <div class="layui-logo layui-hide-xs layui-bg-blue">教务管理系统</div>
       <!-- 头部区域（可配合layui 已有的水平导航） -->
       <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item layui-hide-xs">退出登陆</li>
+        <li id="unlogin" class="layui-nav-item layui-hide-xs">退出登陆</li>
       </ul>
     </div>
 
@@ -27,9 +27,9 @@
       <div class="layui-side-scroll">
         <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
         <ul class="layui-nav layui-nav-tree" lay-filter="test">
-          <li class="layui-nav-item"><a href="javascript:;">学生管理</a></li>
-          <li class="layui-nav-item"><a href="javascript:;">考试管理</a></li>
-          <li class="layui-nav-item"><a href="javascript:;">成绩管理</a></li>
+          <li class="layui-nav-item"><a href="/admin/students">学生管理</a></li>
+          <li class="layui-nav-item"><a href="/admin/exams">考试管理</a></li>
+          <li class="layui-nav-item"><a href="/admin/grades">成绩管理</a></li>
         </ul>
       </div>
     </div>
@@ -65,7 +65,21 @@
   </div>
   <script src="../layui/layui.js"></script>
   <script>
-    var table = layui.table;
+    let table = layui.table;
+    let $ = layui.$;
+    let layer = layui.layer;
+
+    $("#unlogin").click ( function (){
+      $.post("/admin/unlogin",function(resp){
+        console.log(resp);
+        if(resp.code == 0){
+          // 退出登陆成功
+          window.location.href = "/";
+        }else{
+          layer.msg(resp.msg);
+        }
+      })
+    });
 
     //第一个实例
     table.render({
