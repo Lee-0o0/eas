@@ -81,15 +81,32 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public boolean updatePassword(int id, String oldPsw, String newPsw) {
-        StudentPO studentPO = studentMapper.getStudentById(id);
+    public Response updatePassword(String studentNumber, String oldPsw, String newPsw) {
+        Response response = new Response();
+        response.setCode(-1);
 
-        if(!studentPO.getPassword().equals(oldPsw)){
-            return false;
+        StudentPO studentPO = studentMapper.getStudentByStudentNumber(studentNumber);
+        if(studentPO == null){
+            response.setMsg("不存在该学生");
+            return response;
+        }
+
+        if(!oldPsw.equals(studentPO.getPassword())){
+            response.setMsg("原密码错误，请确认学号或原密码是否正确");
+            return response;
         }
 
         studentPO.setPassword(newPsw);
-        return studentMapper.updateStudent(studentPO) == 1;
+
+        boolean b = studentMapper.updateStudent(studentPO) == 1;
+        if(!b){
+            response.setMsg("修改密码失败");
+            return response;
+        }
+
+        response.setCode(0);
+        response.setMsg("成功");
+        return response;
     }
 
     @Override

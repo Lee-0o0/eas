@@ -11,6 +11,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
         if(session == null) {
+            System.out.println(request.getRequestURL().toString());
             response.sendRedirect("/");    // 没有登陆，跳转到首页
             return false;
         }

@@ -92,4 +92,29 @@ public class StudentController {
         return "/updatePassword";
     }
 
+    @ResponseBody
+    @PostMapping("/student/updatepassword")
+    public Response updatePassword(String studentNumber,String oldPassword,String newPassword){
+        System.out.println(studentNumber);
+        System.out.println(oldPassword);
+        System.out.println(newPassword);
+
+        Response response = new Response();
+        response.setCode(-1);
+        if(studentNumber == null || "".equals(studentNumber)){
+            response.setMsg("学号不能为空");
+            return response;
+        }
+        if(oldPassword == null || "".equals(oldPassword)){
+            response.setMsg("原密码不能为空");
+            return response;
+        }
+        if(newPassword == null || "".equals(newPassword)){
+            response.setMsg("新密码不能为空");
+            return response;
+        }
+
+        return studentService.updatePassword(studentNumber, oldPassword, newPassword);
+    }
+
 }

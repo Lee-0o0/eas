@@ -11,7 +11,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")     // 拦截所有路径，包括静态资源路径
-                .excludePathPatterns("/js/**","/img/**","/css/**") // 移除某些路径的拦截
-                .excludePathPatterns("/admin/login","/","/updatepassword","/student/grade");
+                .excludePathPatterns("/js/**","/img/**","/css/**","/layui/**") // 移除某些路径的拦截
+                .excludePathPatterns("/admin/login","/","/student/updatepassword","/student/grade");
     }
 }

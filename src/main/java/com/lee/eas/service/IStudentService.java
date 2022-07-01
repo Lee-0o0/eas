@@ -18,7 +18,7 @@ public interface IStudentService {
 
     boolean deleteStudent(int id);
 
-    boolean updatePassword(int id, String oldPsw, String newPsw);
+    Response updatePassword(String studentNumber, String oldPsw, String newPsw);
 
     Response<StudentWithGradeDTO> queryGrade(String studentNumber, String password);
 }

@@ -4,10 +4,10 @@
     <insert id="insertStudent">
         insert into student(`name`,`student_number`,`password`) values (#{name},#{studentNumber},#{password})
     </insert>
-    <update id="updateStudent">
+    <update id="updateStudent" parameterType="com.lee.eas.domain.po.StudentPO">
         update student
         set name = #{name},
-            student_number = #{studentNumer},
+            student_number = #{studentNumber},
             password = #{password}
         where id=#{id}
     </update>
