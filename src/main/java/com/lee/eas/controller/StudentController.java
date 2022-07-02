@@ -101,6 +101,11 @@ public class StudentController {
         return "/admin/addStudent";
     }
 
+    @GetMapping("/student/update")
+    public String toUpdateStudent(){
+        return "/admin/updateStudent";
+    }
+
     @ResponseBody
     @PostMapping("/student/updatepassword")
     public Response updatePassword(String studentNumber,String oldPassword,String newPassword){
@@ -124,6 +129,20 @@ public class StudentController {
         }
 
         return studentService.updatePassword(studentNumber, oldPassword, newPassword);
+    }
+
+    @ResponseBody
+    @PostMapping("/updatestudent")
+    public Response updateStudent(StudentDTO studentDTO){
+        System.out.println(studentDTO);
+        Response response = new Response();
+        response.setCode(-1);
+        if( studentDTO==null || studentDTO.getId() <= 0){
+            response.setMsg("未查询到该学生信息");
+            return response;
+        }
+
+        return studentService.updateStudent(studentDTO);
     }
 
     @ResponseBody

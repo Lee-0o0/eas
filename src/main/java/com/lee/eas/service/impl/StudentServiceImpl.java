@@ -87,14 +87,37 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public boolean updateStudent(StudentDTO studentDTO) {
+    public Response updateStudent(StudentDTO studentDTO) {
 
+        Response response = new Response();
+        response.setCode(-1);
         StudentPO studentPO = studentMapper.getStudentById(studentDTO.getId());
+        if(studentPO == null){
+            response.setMsg("未查到对应的学生");
+            return response;
+        }
+        StudentPO studentByStudentNumber = studentMapper.getStudentByStudentNumber(studentDTO.getStudentNumber());
+        if(studentByStudentNumber != null){
+            response.setMsg(String.format("学号重复，该学号已由学生%s占有",studentByStudentNumber.getName()));
+            return response;
+        }
 
         studentPO.setName(studentDTO.getName());
         studentPO.setStudentNumber(studentDTO.getStudentNumber());
 
-        return studentMapper.updateStudent(studentPO) == 1;
+        try{
+            boolean b = studentMapper.updateStudent(studentPO) == 1;
+            if(!b){
+                response.setMsg("更新失败");
+            }else {
+                response.setCode(0);
+                response.setMsg("成功");
+            }
+        }catch (Exception e){
+            response.setMsg(e.getMessage());
+        }
+
+        return response;
     }
 
     @Override

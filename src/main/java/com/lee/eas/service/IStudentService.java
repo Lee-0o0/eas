@@ -14,7 +14,7 @@ public interface IStudentService {
 
     Response insertStudent(StudentDTO studentDTO);
 
-    boolean updateStudent(StudentDTO studentDTO);
+    Response updateStudent(StudentDTO studentDTO);
 
     Response deleteStudent(int id);
 
