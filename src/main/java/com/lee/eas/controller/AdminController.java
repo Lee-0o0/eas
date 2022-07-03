@@ -61,22 +61,22 @@ public class AdminController {
 
     @GetMapping("/admin/login")
     public String toLogin(){
-        return "/admin/login";
+        return "admin/login";
     }
 
     @GetMapping("/admin/students")
     public String toStudents(){
-        return "/admin/students";
+        return "admin/students";
     }
 
     @GetMapping("/admin/exams")
     public String toExams(){
-        return "/admin/exams";
+        return "admin/exams";
     }
 
     @GetMapping("/admin/grades")
     public String toGrades(){
-        return "/admin/grades";
+        return "admin/grades";
     }
 
     @PostMapping("/upload")

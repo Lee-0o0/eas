@@ -37,6 +37,12 @@ public interface StudentMapper {
     List<StudentPO> queryAllStudents(int offset, int pageSize);
 
     /**
+     * 查询所有的学生信息
+     * @return
+     */
+    List<StudentPO> queryAll();
+
+    /**
      * 新增学生
      * @param studentPO
      */

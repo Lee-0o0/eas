@@ -27,5 +27,8 @@
     <select id="getStudentByStudentNumber" resultType="com.lee.eas.domain.po.StudentPO">
         select * from student where student_number = #{number}
     </select>
+    <select id="queryAll" resultType="com.lee.eas.domain.po.StudentPO">
+        select * from student
+    </select>
 
 </mapper>

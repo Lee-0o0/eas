@@ -46,7 +46,7 @@ public class StudentController {
 
 
     /**
-     * 查询成绩
+     * 查询某个学生最新的成绩
      * @param studentNumber
      * @param password
      * @return
@@ -93,17 +93,17 @@ public class StudentController {
 
     @GetMapping("/student/updatepassword")
     public String toUpdatePassword(){
-        return "/updatePassword";
+        return "updatePassword";
     }
 
     @GetMapping("/student/add")
     public  String toAddStudent(){
-        return "/admin/addStudent";
+        return "admin/addStudent";
     }
 
     @GetMapping("/student/update")
     public String toUpdateStudent(){
-        return "/admin/updateStudent";
+        return "admin/updateStudent";
     }
 
     @ResponseBody

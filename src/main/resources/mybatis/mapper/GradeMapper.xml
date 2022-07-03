@@ -5,4 +5,7 @@
     <select id="getGrade" resultType="com.lee.eas.domain.po.GradePO">
         select * from grade where exam_number = #{examId} and student_id = #{studentId}
     </select>
+    <select id="queryGradeByExamId" resultType="com.lee.eas.domain.po.GradePO">
+        select * from grade where exam_number = #{examId}
+    </select>
 </mapper>
