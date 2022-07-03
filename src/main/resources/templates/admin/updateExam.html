@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>添加考试</title>
+    <title>修改考试信息</title>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <style>
         .mycontainer {
@@ -25,16 +25,17 @@
     <div class="layui-row">
         <div class="layui-col-md6 layui-col-md-offset3">
             <form class="layui-form">
+                <input type="hidden" id="examId" name="id">
                 <div class="layui-form-item">
                     <label class="layui-form-label">名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" placeholder="请输入考试名称" autocomplete="off" class="layui-input">
+                        <input id="name" type="text" name="name" placeholder="请输入考试名称" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">地点：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="examAddress" placeholder="请输入考试地点" autocomplete="off" class="layui-input">
+                        <input id="examAddress" type="text" name="examAddress" placeholder="请输入考试地点" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -60,7 +61,6 @@
     let layer = layui.layer;
     let form = layui.form;
     let $ = layui.$;
-
     let laydate = layui.laydate;
 
     //执行一个laydate实例
@@ -84,9 +84,9 @@
             return false;
         }
 
-        $.post("/exam", data.field, function (resp) {
+        $.post("/updateexam", data.field, function (resp) {
             if (resp.code == 0) {
-                // 添加成功
+                // 修改成功
                 layer.msg(resp.msg);
                 let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                 parent.layer.close(index); //再执行关闭

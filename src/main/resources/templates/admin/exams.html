@@ -40,7 +40,7 @@
             <div class="layui-fluid">
                 <div class="layui-row">
                     <div class="div-col-md12">
-                        <button type="button" class="layui-btn layui-btn-fluid">添加考试</button>
+                        <button id="addExam" type="button" class="layui-btn layui-btn-fluid">添加考试</button>
                     </div>
                 </div>
                 <div class="layui-row">
@@ -77,9 +77,8 @@
     });
 
     //第一个实例
-    table.render({
+    let examTable = table.render({
         elem: '#table',
-        height: 312,
         url: '/exam', //数据接口
         page: true, //开启分页
         limit: 10,
@@ -96,13 +95,87 @@
                 "data": d.data.data //解析数据列表
             }
         },
-        cols: [ [ //表头 [[ 之间要加空格
+        cols: [
+            [ //表头 [[ 之间要加空格
             { field: 'id', title: 'ID', sort: true },
             { field: 'name', title: '名称', sort: true },
             { field: 'examAddress', title: '考试地点', sort: true },
-            { field: 'examDatetime', title: '考试时间', sort: true },
-            { field: 'studentNumber', title: '操作', align:'center' },
-        ] ]
+            {
+                field: 'examDatetime',
+                title: '考试时间',
+                sort: true ,
+                templet:function (d){
+                    console.log(d);
+                    return layui.util.toDateString(d.examDatetime, "yyyy-MM-dd HH:mm:ss");
+                }
+            },
+            {
+                title: '操作',
+                align:'center',
+                templet: function () {
+                    let content = "<button type=\"button\" lay-event=\"edit\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-normal\">编辑</button>";
+                    content += "<button type=\"button\" lay-event=\"del\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-danger\">删除</button>";
+                    return content;
+                }
+            },
+        ]
+        ]
+    });
+
+    //单元格工具事件
+    table.on('tool(test)', function (obj) { // 注：test 是 table 原始标签的属性 lay-filter="对应的值"
+        console.log(obj);
+        let layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+        if (layEvent === 'edit') { //编辑
+            // 编辑学生信息
+            layer.open({
+                type: 2,
+                title: "编辑考试信息",
+                content: "/exam/update",
+                area: ['600px', '400px'],
+                end: function () {
+                    examTable.reload();
+                },
+                success: function(layero, index){
+                    console.log(layero, index);
+                    let body = layer.getChildFrame('body', index);
+                    body.find("#examId").val(obj.data.id);
+                    body.find("#name").val(obj.data.name);
+                    body.find("#examAddress").val(obj.data.examAddress);
+                    body.find("#examDatetime").val(layui.util.toDateString(obj.data.examDatetime, "yyyy-MM-dd HH:mm:ss"));
+                }
+            });
+
+        } else if (layEvent === 'del') { //删除
+            layer.confirm('是否删除？',{icon:3,title:"提示"} , function (index) {
+                layer.close(index);
+                //向服务端发送删除指令
+                $.get("/deleteexam",{id:obj.data.id},function(resp){
+                    if(resp.code == 0){
+                        // 删除成功，更新表格
+                        examTable.reload();
+                    }else{
+                        // 删除失败
+                        layer.msg(resp.msg);
+                    }
+                })
+            });
+        }
+    });
+
+
+    $("#addExam").click(function () {
+        // 添加考试
+        layer.open({
+            type: 2,
+            title: "添加考试",
+            content: "/exam/add",
+            area: ['600px', '400px'],
+            end: function () {
+                examTable.reload();
+            }
+        });
     });
 </script>
 </body>
