@@ -115,6 +115,8 @@
                 templet: function () {
                     let content = "<button type=\"button\" lay-event=\"edit\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-normal\">编辑</button>";
                     content += "<button type=\"button\" lay-event=\"del\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-danger\">删除</button>";
+                    content += "<button type=\"button\" lay-event=\"import\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-danger\">导入</button>";
+                    content += "<button type=\"button\" lay-event=\"check\" class=\"layui-btn layui-btn-radius layui-btn-xs layui-btn-danger\">查看</button>";
                     return content;
                 }
             },
@@ -161,6 +163,13 @@
                     }
                 })
             });
+        }else if(layEvent === 'import'){
+            // 导入学生成绩
+        }else if(layEvent === 'check'){
+            console.log("check")
+            // 查看学生成绩
+            //$.get("/admin/grade/"+obj.data.id)
+            window.location.href = "/admin/grade/"+obj.data.id
         }
     });
 

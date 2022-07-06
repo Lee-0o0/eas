@@ -1,6 +1,5 @@
 package com.lee.eas.controller;
 
-import com.alibaba.excel.EasyExcel;
 import com.lee.eas.domain.dto.Response;
 import com.lee.eas.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +78,10 @@ public class AdminController {
         return "admin/grades";
     }
 
-    @PostMapping("/upload")
-    public String upload(@RequestPart MultipartFile file) throws IOException {
-        // 判断文件是否上传成功，如果是，则保存在磁盘中
-        //EasyExcel.read(file.getInputStream(), UploadData.class, new UploadDataListener(uploadDAO)).sheet().doRead();
-        return "success";
-
+    @GetMapping("/admin/grade/{id}")
+    public String toGradesById(@PathVariable String id){
+        return "admin/grades";
     }
+
 
 }

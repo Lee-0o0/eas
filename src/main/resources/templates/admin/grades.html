@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>成绩管理 - 教务管理系统</title>
-    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
     <style>
         .layui-row{
             margin: 10px;
@@ -58,10 +58,19 @@
         2022 © 教务管理系统
     </div>
 </div>
-<script src="../layui/layui.js"></script>
+<script src="/layui/layui.js"></script>
 <script>
 
+    let url = "/grade";
     console.log(window.location.pathname);
+    let thePath = window.location.pathname;
+    const lastItem = thePath.substring(thePath.lastIndexOf('/') + 1)
+    var n = Number(lastItem);
+    if (!isNaN(n))
+    {
+        url = url + "/" + n;
+    }
+    console.log('url = ',url)
 
     let table = layui.table;
     let $ = layui.$;
@@ -82,7 +91,7 @@
     //第一个实例
     let gradeTable = table.render({
         elem: '#table',
-        url: '/grade', //数据接口
+        url: url, //数据接口
         //page: true, //开启分页
         // limit: 10,
         // limits: [10, 50, 100, 200],

@@ -9,9 +9,17 @@ import com.lee.eas.mapper.ExamMapper;
 import com.lee.eas.mapper.GradeMapper;
 import com.lee.eas.mapper.StudentMapper;
 import com.lee.eas.service.IGradeService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,5 +89,97 @@ public class GradeServiceImpl implements IGradeService {
             response.setMsg(e.getMessage());
         }
         return response;
+    }
+
+    @Override
+    public Response importGrades(int examId, String fileName, MultipartFile file) {
+        Response result = new Response();
+        result.setCode(-1);
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook wb;
+            if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+                wb = new XSSFWorkbook(inputStream);
+            } else {
+                wb = new HSSFWorkbook(inputStream);
+            }
+            Sheet sheet = wb.getSheetAt(0);
+            if (sheet == null) {
+                result.setMsg("Excel数据为空！");
+                return result;
+            }
+
+            List<StudentWithGradeDTO> excelData = new ArrayList<>();
+            StudentWithGradeDTO temporary;
+
+            // 循环Excel
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) {
+                    continue;
+                }
+
+                temporary = new StudentWithGradeDTO();
+
+                // 学生姓名
+                if (row.getCell(0) != null) {
+                    row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
+                    String userName = row.getCell(0).getStringCellValue();
+                    temporary.setName(userName);
+                }
+
+                // 学号
+                if (row.getCell(1) != null) {
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                    String studentNumber = row.getCell(1).getStringCellValue();
+                    if (studentNumber == null || studentNumber.isEmpty()) {
+                        result.setMsg("Excel中学号为必填项，不能为空，请填写后再进行上传！");
+                        return result;
+                    }
+                    temporary.setStudentNumber(studentNumber);
+                }
+
+                // 手机号
+//                if (row.getCell(1) != null) {
+//                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+//                    String mobile = row.getCell(1).getStringCellValue();
+//                    if (mobile == null || mobile.isEmpty()) {
+//                        result.setMsg("Excel中用户手机号为必填项，不能为空，请填写后再进行上传！");
+//                        return result;
+//                    }
+//                    temporary.setMobile(mobile);
+//                }
+//
+//                // QQ
+//                if (row.getCell(2) != null) {
+//                    row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
+//                    String qq = row.getCell(2).getStringCellValue();
+//                    if (qq == null || qq.isEmpty()) {
+//                        result.setMsg("Excel中用户QQ为必填项，不能为空，请填写后再进行上传！");
+//                        return result;
+//                    }
+//                    temporary.setQq(qq);
+//                }
+                //添加进list
+                excelData.add(temporary);
+            }
+
+            // 此处省略其他操作处理
+            // 此处省略其他操作处理
+
+            // 做插入处理
+//            if (excelData.size() > 0) {
+//                // 将Excel数据插入数据库
+//                int i = uploadEexcelMapper.insertExcelData(excelData);
+//                if (i == excelData.size()) {
+//                    // 数据全部插入成功
+//                    result.setMessage("success");
+//                }
+//            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
