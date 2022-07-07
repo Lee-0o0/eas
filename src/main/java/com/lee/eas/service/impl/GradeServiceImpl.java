@@ -17,10 +17,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -77,6 +81,8 @@ public class GradeServiceImpl implements IGradeService {
                     studentWithGradeDTO.setSubjectTwo(gradePO.getSubjectTwo());
                     studentWithGradeDTO.setTotal(gradePO.getTotal());
                     studentWithGradeDTO.setRank(gradePO.getRank());
+                }else{
+                    continue;
                 }
 
                 studentWithGradeDTOList.add(studentWithGradeDTO);
@@ -91,11 +97,19 @@ public class GradeServiceImpl implements IGradeService {
         return response;
     }
 
+    @Transactional
     @Override
     public Response importGrades(int examId, String fileName, MultipartFile file) {
         Response result = new Response();
         result.setCode(-1);
         try {
+            // 查询考试是否存在
+            ExamPO examById = examMapper.getExamById(examId);
+            if(examById == null){
+                result.setMsg("考试不存在");
+                return result;
+            }
+
             InputStream inputStream = file.getInputStream();
             Workbook wb;
             if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
@@ -112,7 +126,7 @@ public class GradeServiceImpl implements IGradeService {
             List<StudentWithGradeDTO> excelData = new ArrayList<>();
             StudentWithGradeDTO temporary;
 
-            // 循环Excel
+            // 循环Excel，获取数据
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) {
@@ -139,46 +153,86 @@ public class GradeServiceImpl implements IGradeService {
                     temporary.setStudentNumber(studentNumber);
                 }
 
-                // 手机号
-//                if (row.getCell(1) != null) {
-//                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-//                    String mobile = row.getCell(1).getStringCellValue();
-//                    if (mobile == null || mobile.isEmpty()) {
-//                        result.setMsg("Excel中用户手机号为必填项，不能为空，请填写后再进行上传！");
-//                        return result;
-//                    }
-//                    temporary.setMobile(mobile);
-//                }
-//
-//                // QQ
-//                if (row.getCell(2) != null) {
-//                    row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
-//                    String qq = row.getCell(2).getStringCellValue();
-//                    if (qq == null || qq.isEmpty()) {
-//                        result.setMsg("Excel中用户QQ为必填项，不能为空，请填写后再进行上传！");
-//                        return result;
-//                    }
-//                    temporary.setQq(qq);
-//                }
+                // 科目一
+                if (row.getCell(2) != null) {
+                    row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
+                    String subjectOne = row.getCell(2).getStringCellValue();
+                    if (subjectOne == null || subjectOne.isEmpty()) {
+                        subjectOne = "0";
+                    }
+                    temporary.setSubjectOne(subjectOne);
+                }
+                // 科目二
+                if (row.getCell(3) != null) {
+                    row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
+                    String subjectTwo = row.getCell(3).getStringCellValue();
+                    if (subjectTwo == null || subjectTwo.isEmpty()) {
+                        subjectTwo = "0";
+                    }
+                    temporary.setSubjectTwo(subjectTwo);
+                }
+
                 //添加进list
                 excelData.add(temporary);
             }
 
-            // 此处省略其他操作处理
-            // 此处省略其他操作处理
+            if(excelData.size() == 0){
+                result.setMsg("Excel数据为空！");
+                return result;
+            }
+            // 获取所有的学生数据
+            List<StudentPO> studentPOList = studentMapper.queryAll();
+
+            List<GradePO> gradePOList = new ArrayList<>();
+            for (StudentWithGradeDTO s : excelData) {
+                StudentPO studentPO = studentPOList.stream().filter(x -> x.getStudentNumber().equals(s.getStudentNumber())).findFirst().orElse(null);
+
+                GradePO gradePO = new GradePO();
+                gradePO.setExamNumber(examId);
+                gradePO.setStudentId(studentPO.getId());
+
+                gradePO.setSubjectOne(s.getSubjectOne());
+                gradePO.setSubjectTwo(s.getSubjectTwo());
+                gradePO.calculateTotal();
+
+                gradePOList.add(gradePO);
+            }
+            // 计算排名
+            Collections.sort(gradePOList, new Comparator<GradePO>() {
+                @Override
+                public int compare(GradePO o1, GradePO o2) {
+                    try {
+                        BigDecimal b1 = new BigDecimal(o1.getTotal());
+                        BigDecimal b2 = new BigDecimal(o2.getTotal());
+                        return b2.compareTo(b1);
+                    }catch (Exception e){}
+                    return 0;
+                }
+            });
+
+            gradePOList.get(0).setRank(1);
+            for(int i = 1; i < gradePOList.size(); i++){
+                if(gradePOList.get(i-1).getTotal().equals(gradePOList.get(i))){
+                    gradePOList.get(i).setRank(gradePOList.get(i-1).getRank());
+                }else{
+                    gradePOList.get(i).setRank(i+1);
+                }
+            }
 
             // 做插入处理
-//            if (excelData.size() > 0) {
-//                // 将Excel数据插入数据库
-//                int i = uploadEexcelMapper.insertExcelData(excelData);
-//                if (i == excelData.size()) {
-//                    // 数据全部插入成功
-//                    result.setMessage("success");
-//                }
-//            }
+            int i = gradeMapper.insertBatchGrade(gradePOList);
+
+            if(i == gradePOList.size()) {
+                result.setCode(0);
+                result.setMsg("成功");
+            }else{
+                result.setMsg("未成功插入");
+            }
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+            result.setCode(-1);
+            result.setMsg(e.getMessage());
         }
         return result;
     }

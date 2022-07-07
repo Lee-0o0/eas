@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改考试信息</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <style>
+        .mycontainer {
+            position: absolute;
+            left: 15%;
+            top: 25%;
+            width: 70%;
+            height: 50%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="layui-container mycontainer">
+    <input type="hidden" id="examwId" name="examId">
+    <div class="layui-btn-container">
+        <button type="button" class="layui-btn layui-btn-normal" id="test8" name="file">选择文件</button>
+        <button type="button" class="layui-btn" id="test9">开始上传</button>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+
+    let layer = layui.layer;
+    let form = layui.form;
+    let $ = layui.$;
+    let upload = layui.upload;
+
+    upload.render({
+        elem: '#test8',
+        url: '/upload', //此处配置你自己的上传接口即可
+        auto: false,
+        accept: 'file',
+        bindAction: '#test9',
+        before: function (){
+            let examId = $('#examwId').val();
+            this.data = {
+                examId: examId,
+            }
+        },
+        done: function(resp){
+            if (resp.code == 0) {
+                // 修改成功
+                layer.msg(resp.msg);
+                let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            } else {
+                // 添加失败
+                layer.msg(resp.msg);
+            }
+        }
+    });
+
+    form.on('submit(okBtn)', function (data) {
+        // 上传学生成绩
+        $.post("/upload", data.field, function (resp) {
+            if (resp.code == 0) {
+                // 修改成功
+                layer.msg(resp.msg);
+                let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            } else {
+                // 添加失败
+                layer.msg(resp.msg);
+            }
+        },"json")
+
+        return false;
+    })
+</script>
+</body>
+
+</html>

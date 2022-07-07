@@ -1,11 +1,11 @@
 -- educational administration system EAS
-drop database if exists EAS;
+drop database if exists eas;
 
-create database EAS 
+create database eas
 character set utf8mb4
 collate utf8mb4_unicode_ci; 
 
-use EAS;
+use eas;
 
 create table administrator(
     `id` int unsigned not null primary key auto_increment,

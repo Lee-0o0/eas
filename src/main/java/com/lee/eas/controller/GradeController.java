@@ -30,8 +30,9 @@ public class GradeController {
     }
 
 
+    @ResponseBody
     @PostMapping("/upload")
-    public Response upload(@RequestParam int examId, @RequestPart MultipartFile file) throws IOException {
+    public Response upload(@RequestParam String examId, @RequestParam("file") MultipartFile file) throws IOException {
         Response result = new Response();
         try {
             if (file == null) {
@@ -57,7 +58,9 @@ public class GradeController {
                 return result;
             }
 
-            return gradeService.importGrades(examId, fileName, file);
+            int exam = Integer.parseInt(examId);
+
+            return gradeService.importGrades(exam, fileName, file);
 
         } catch (Exception e) {
             e.printStackTrace();

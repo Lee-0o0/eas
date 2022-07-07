@@ -115,4 +115,9 @@ public class ExamController {
     public String toExamUpdate(){
         return "/admin/updateExam";
     }
+
+    @GetMapping("/exam/importgrade")
+    public String toImportGradeUpload(){
+        return "/admin/importgrade";
+    }
 }

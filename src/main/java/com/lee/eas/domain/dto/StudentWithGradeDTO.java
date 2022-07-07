@@ -28,4 +28,5 @@ public class StudentWithGradeDTO{
         this.total = gradePO.getTotal();
         this.rank = gradePO.getRank();
     }
+
 }

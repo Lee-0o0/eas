@@ -12,4 +12,7 @@ public interface GradeMapper {
 
     GradePO getGrade(int examId,int studentId);
 
+    int insertGrade(GradePO gradePO);
+
+    int insertBatchGrade(List<GradePO> gradePOList);
 }

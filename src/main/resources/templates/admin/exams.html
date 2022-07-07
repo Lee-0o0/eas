@@ -165,8 +165,22 @@
             });
         }else if(layEvent === 'import'){
             // 导入学生成绩
+            layer.open({
+                type: 2,
+                title: "导入考试成绩",
+                content: "/exam/importgrade",
+                area: ['600px', '400px'],
+                end: function () {
+                    examTable.reload();
+                },
+                success: function(layero, index){
+                    console.log(layero, index);
+                    let body = layer.getChildFrame('body', index);
+                    body.find("#examwId").val(obj.data.id);
+                }
+            });
         }else if(layEvent === 'check'){
-            console.log("check")
+            // console.log("check")
             // 查看学生成绩
             //$.get("/admin/grade/"+obj.data.id)
             window.location.href = "/admin/grade/"+obj.data.id
